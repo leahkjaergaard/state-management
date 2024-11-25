@@ -1,101 +1,83 @@
+"use client";
 import Image from "next/image";
+import Link from "next/link";
+
+import { useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  // arrays for sizes and colors
+  const sizes = ["XS", "S", "M", "L", "XL"];
+  const colors = ["White", "Black", "Grey", "Yellow", "Blue"];
+  const searchParams = useSearchParams();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  console.log(searchParams);
+
+  const createQueryString = useCallback(
+    (name, value) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  return (
+    <main className="flex-1">
+      <section className="mx-auto grid max-w-7xl p-8">
+        <form className="grid gap-2 sm:grid-cols-2 lg:grid-cols-8">
+          <div className="md:col-span-1 lg:col-span-5">
+            <div className="aspect-square overflow-hidden bg-neutral-50">
+              <Image alt="T-shirt" width={500} height={500} className="h-full w-full object-contain object-center" src="/tshirt.png" priority />
+            </div>
+          </div>
+          <div className="flex flex-col pt-6 sm:col-span-1 sm:px-6 sm:pt-0 lg:col-span-3 lg:pt-16">
+            <div>
+              <h1 className="mb-4 flex-auto text-3xl font-medium tracking-tight text-neutral-900">T-shirt</h1>
+              <p className="mb-8 text-sm">kr. 90.00</p>
+              <fieldset className="my-4">
+                <legend className="sr-only">Sizes</legend>
+                <div className="flex flex-wrap gap-3">
+                  {sizes.map((size, index) => {
+                    return (
+                      <Link key={index} className={`${searchParams.get("size") == size && "bg-blue-200 "} border-neutral-800 text-neutral-900 hover:bg-blue-200 relative flex min-w-[5ch] items-center justify-center rounded border p-4 text-center text-sm font-semibold`} href={`?${createQueryString("size", size)}`}>
+                        {size}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </fieldset>
+              <fieldset className="my-4">
+                <legend className="sr-only">Colors</legend>
+                <div className="flex flex-wrap gap-3">
+                  {colors.map((color, index) => {
+                    return (
+                      <Link key={index} className={`${searchParams.get("color") == color && "bg-blue-200 "}border-neutral-800 text-neutral-900 hover:bg-blue-200 relative flex min-w-[5ch] items-center justify-center rounded border p-4 text-center text-sm font-semibold`} href={`?${createQueryString("color", color)}`}>
+                        {color}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </fieldset>
+              <div className="mt-8">
+                <Link href={`/payment?${searchParams}`}>
+                  <button type="submit" className="h-12 items-center rounded-md bg-blue-700 px-6 py-3 text-base font-medium leading-6 text-white shadow hover:bg-neutral-800">
+                    <span>Add to cart</span>
+                  </button>
+                </Link>
+              </div>
+              <div className="mt-8 space-y-6 text-sm text-neutral-500">
+                <div>
+                  <p>
+                    <b>Box fit t-shirt med logo i mocha med korte ærmer, rund hals og ‘drop shoulders’ i kraftig og blød bomuld med oversize pasform.</b>&nbsp;T-shirten har et oversized fit. Størrelserne er dog ‘normale’ i den forstand, at hvis du normalt bruger str. L, så skal du også vælge L her.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
   );
 }
